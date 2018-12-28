@@ -1,0 +1,19 @@
+{
+  "name": "blocipedia-node",
+  "version": "1.0.0",
+  "description": "A Wikipedia Clone App made in NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "export NODE_ENV=test && jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kel7774/blocipedia-node.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kel7774/blocipedia-node/issues"
+  },
+  "homepage": "https://github.com/kel7774/blocipedia-node#readme"
+}
