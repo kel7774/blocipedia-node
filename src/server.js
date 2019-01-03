@@ -3,6 +3,9 @@ const http = require("http");
 const port = normalizePort(process.env.PORT || 3000);
 app.set("port", port);
 const server = http.createServer(app);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
 
 server.listen(port);
 
