@@ -19,8 +19,8 @@ module.exports = {
                 to: user.email,
                 from: "kelli@waitrapp.com",
                 subject: "Welcome to Blocipedia!",
-                text: `Hi ${user.name}, welcome to Blocipedia!`,
-                html: `<strong>Welcome to Blocipedia ${user.name}!</strong>`
+                text: `Hi ${user.name}, Welcome to Blocipedia!`,
+                html: `<strong>Welcome to Blocipedia, ${user.name}!</strong>`
             };
             sgMail.send(msg);
             callback(null, user);
