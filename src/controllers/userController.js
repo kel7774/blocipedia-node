@@ -3,7 +3,7 @@ const passport = require("passport");
 
 module.exports = {
     signUp(req, res, next){
-        res.render("users/signup");
+        res.render("users/sign_up");
     },
     create(req, res, next){
         let newUser = {
