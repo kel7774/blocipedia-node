@@ -13,7 +13,6 @@ module.exports = {
             password: hashedPassword
         })
         .then((user) => {
-            console.log('API KEY: ', process.env.SENDGRID_API_KEY);
             sgMail.setApiKey(process.env.SENDGRID_API_KEY);
             const msg = {
                 to: user.email,
