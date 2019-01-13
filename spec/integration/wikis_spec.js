@@ -9,9 +9,8 @@ describe("routes : wikis", () => {
         this.wiki;
         sequelize.sync({force: true}).then((res) => {
             Wiki.create({
-                title: "First Wiki",
-                body: "First wiki body",
-                private: true
+                title: "JS Frameworks",
+                body: "There is a lot of them"
             })
             .then((wiki) => {
                 this.wiki = wiki;
@@ -25,11 +24,11 @@ describe("routes : wikis", () => {
     });
     describe("GET /wikis", () => {
         it("should return a status code 200 and all wikis", (done) => {
-            request.get(base, (err, res, body) => {
+            request.get(base, (err, res,body) => {
                 expect(res.statusCode).toBe(200);
                 expect(err).toBeNull();
                 expect(body).toContain("Wikis");
-                expect(body).toContain("First wiki body");
+                expect(body).toContain("JS Frameworks");
                 done();
             });
         });
@@ -47,24 +46,26 @@ describe("routes : wikis", () => {
         const options = {
             url: `${base}create`,
             form: {
-                title: "JS Frameworks",
-                body: "React & NodeJS"
+                title: "blink-182 songs",
+                body: "What's your favorite blink-182 song?"
             }
         };
         it("should create a new wiki and redirect", (done) => {
-            request.post(options, (err, res, body) => {
-                Wiki.findOne({where: {title: "JS Frameworks"}})
-                .then((wiki) => {
-                    expect(res.statusCode).toBe(303);
-                    expect(wiki.title).toBe("JS Frameworks");
-                    expect(wiki.body).toBe("React & NodeJS");
-                    done();
-                })
-                .catch((err) => {
-                    console.log(err);
-                    done();
-                });
-            });
+            request.post(options,
+                (err, res, body) => {
+                    Wiki.findOne({where: {title: "blink-182 songs"}})
+                    .then((wiki) => {
+                        expect(res.statusCode).toBe(303);
+                        expect(wiki.title).toBe("blink-182 songs");
+                        expect(wiki.body).toBe("What's your favorite blink-182 song?");
+                        done();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        done();
+                    });
+                }
+            );
         });
     });
     describe("GET /wikis/:id", () => {
@@ -91,6 +92,38 @@ describe("routes : wikis", () => {
                     })
                 });
             });
+        });
+    });
+    describe("GET /wikis/:id/edit", () => {
+        it("should render a view with an edit wiki form", (done) => {
+            request.get(`${base}${this.wiki.id}/edit`, (err, res, body) => {
+                expect(err).toBeNull();
+                expect(body).toContain("Edit Wiki");
+                expect(body).toContain("JS Frameworks");
+                done();
+            });
+        });
+    });
+    describe("POST /wikis/:id/update", () => {
+        it("should update the wiki with the given values", (done) => {
+            const options = {
+                url: `${base}${this.wiki.id}/update`,
+                form: {
+                    title: "JS Frameworks",
+                    body: "There are a lot of them"
+                }
+            };
+            request.post(options,
+                (err, res, body) => {
+                    expect(err).toBeNull();
+                    Wiki.findOne({
+                        where: { id: this.wiki.id }
+                    })
+                    .then((wiki) => {
+                        expect(wiki.title).toBe("JS Frameworks");
+                        done();
+                    });
+                });
         });
     });
 });
