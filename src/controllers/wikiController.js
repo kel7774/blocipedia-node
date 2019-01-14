@@ -54,11 +54,12 @@ module.exports = {
         });
     },
     update(req, res, next){
-        wikiQueries.updateWiki(req.params.id, (err, wiki) => {
+        console.log("updating wiki...");
+        wikiQueries.updateWiki(req, req.body, (err, wiki) => {
             if(err || wiki == null){
                 res.redirect(401, `/wikis/${req.params.id}/edit`);
             } else {
-                res.redirect(`/wikis/${wiki.id}`);
+                res.redirect(`/wikis/${req.params.id}`);
             }
         })
     }
