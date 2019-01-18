@@ -69,5 +69,16 @@ module.exports = {
                 req.flash("notice", "Your account has been upgraded!");
             }
         })
+    },
+    downgrade(req, res, next){
+        userQueries.downgrade(req, (err, user) => {
+            if(err || user == null){
+                req.flash("error", err);
+                res.redirect(err, "/");
+            } else {
+                req.flash("notice", "You have successfully downgraded your account.");
+                res.redirect(`/users/${req.params.id}`);
+            }
+        })
     }
 }

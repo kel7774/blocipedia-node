@@ -33,6 +33,15 @@
               </form>
             <% } %>
       </div>
+      
+        <% if(currentUser.role === 'premium') { %>
+            <div>
+                <form style="display: initial" action="/users/<%= currentUser.id %>/downgrade" method="POST">
+                    <button type="submit" class="btn btn-danger">Downgrade</button>
+                    </form>
+                </div>
+        <% } %>
+        
         
     </main>
 

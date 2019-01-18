@@ -62,7 +62,7 @@ module.exports = {
         });
     },
     getUser(id, callback){
-        return User.findbyId(id)
+        return User.findById(id)
         .then((user) => {
             include: [
                 {model: Wiki, as:"wikis"}
