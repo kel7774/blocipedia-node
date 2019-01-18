@@ -52,5 +52,22 @@ module.exports = {
                 res.render("users/show", {...result});
             }
         })
+    },
+    upgrade(req, res, next){
+        var stripe = require("stripe")("pk_test_3qsvchieID6iBgXIBFaIm5mW");
+        const token = req.body.stripeToken;
+        const charge = stripe.charges.create({
+            amount: 1500,
+            currency: 'usd',
+            description: 'Charging for premium account',
+            source: token,
+        });
+        userQueries.upgrade(req.params.id, (err, user) => {
+            if(err || user == null){
+                res.redirect(401, "/");
+            } else {
+                req.flash("notice", "Your account has been upgraded!");
+            }
+        })
     }
 }

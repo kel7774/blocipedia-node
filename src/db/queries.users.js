@@ -1,4 +1,5 @@
 const User = require("./models").User;
+const Wiki = require("./models").Wiki;
 const bcrypt = require("bcryptjs");
 const sgMail = require("@sendgrid/mail");
 
@@ -26,6 +27,22 @@ module.exports = {
         })
         .catch((err) => {
             callback(err);
+        })
+    },
+    upgrade(id, callback){
+        return User.findbyId(id)
+        .then((user) => {
+            if(!user){
+                return callback("User not found.");
+            } else {
+                return user.update({role: 'premium'})
+                .then(() => {
+                    callback(null, user);
+                })
+                .catch((err) => {
+                    callback(err);
+                })
+            }
         })
     }
 }

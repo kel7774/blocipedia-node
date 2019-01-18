@@ -16,6 +16,23 @@
       <div>
           <p><%= `Currently, you are a ${user.role} user.`%></p>
       </div>
+
+      <div>
+          <% if (currentUser.role === "standard") { %> 
+            <form action="/users/<%= currentUser.id %>/upgrade" method="POST">
+                <button type="submit" class="btn btn-primary">Update to Premium Membership</button>
+                <script
+                  src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="pk_test_3qsvchieID6iBgXIBFaIm5mW"
+                  data-amount="999"
+                  data-name="Demo Site"
+                  data-description="Example charge"
+                  data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                  data-locale="auto">
+                </script>
+              </form>
+            <% } %>
+      </div>
         
     </main>
 
