@@ -7,7 +7,7 @@ module.exports = {
       'role',
       {
         type: Sequelize.STRING,
-        allowNull:false,
+        allowNull: false,
         defaultValue: "standard"
       }
     );
