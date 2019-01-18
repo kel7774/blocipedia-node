@@ -44,5 +44,35 @@ module.exports = {
                 })
             }
         })
+    },
+    downgrade(req, callback){
+        return User.findById(req.params.id)
+        .then((user) => {
+            if(!user){
+                return callback("User not found");
+            } else {
+                return user.update({role: "standard"})
+                .then(() => {
+                    callback(null, user);
+                })
+                .catch((err) => {
+                    callback(err);
+                });
+            }
+        });
+    },
+    getUser(id, callback){
+        return User.findbyId(id)
+        .then((user) => {
+            include: [
+                {model: Wiki, as:"wikis"}
+            ]
+        })
+        .then((user) => {
+            callback(null, user);
+        })
+        .catch((err) => {
+            callback(err);
+        })
     }
 }
