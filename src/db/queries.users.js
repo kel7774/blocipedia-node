@@ -62,8 +62,7 @@ module.exports = {
         });
     },
     getUser(id, callback){
-        return User.findById(id)
-        .then((user) => {
+        return User.findById(id, {
             include: [
                 {model: Wiki, as:"wikis"}
             ]
@@ -73,6 +72,6 @@ module.exports = {
         })
         .catch((err) => {
             callback(err);
-        })
+        });
     }
 }
