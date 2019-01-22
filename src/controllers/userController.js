@@ -67,6 +67,7 @@ module.exports = {
                 res.redirect(401, "/");
             } else {
                 req.flash("notice", "Your account has been upgraded!");
+                res.redirect(`/users/${req.params.id}`);
             }
         })
     },
