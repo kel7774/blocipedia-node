@@ -11,7 +11,6 @@ for(let i = 1; i <= 15; i++){
     name: faker.name.firstName() + faker.name.lastName(),
     email: faker.internet.email(),
     password: hashedPassword,
-    role: 0,
     createdAt: new Date(),
     updatedAt: new Date()
   });
