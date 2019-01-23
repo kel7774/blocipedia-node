@@ -17,7 +17,7 @@
           <p><%= `Currently, you are a ${user.role} user.`%></p>
       </div>
       <div>
-          <p class="upgrade">Upgrade</p>
+          <p class="account-status">Change Account Status</p>
           <% if(currentUser.role === 'premium') { %>
             <div>
                 <form style="display:initial" action="/users/<%= currentUser.id %>/downgrade" method="post">
@@ -43,8 +43,29 @@
               </form>
             <% } %>
       </div>
+
+      <hr>
       
-        
+      <div class="wiki-list">
+            <h3>Your wikis</h3>
+                <ul class="list-group">
+                    <% user.wikis.forEach((wiki) => { %>
+                    <% if(wiki.private) { %>
+                        <% if(currentUser) { %>
+                        <% if(currentUser.isAdmin() || currentUser.isPremium()) { %>
+                            <li class="list-group-item">
+                            <a href="/wikis/<%= wiki.id %>"> <%- wiki.title %> </a>
+                            </li>
+                        <% } %>
+                        <% } %>
+                    <% } else { %>
+                        <li class="list-group-item">
+                        <a href="/wikis/<%= wiki.id %>"> <%- wiki.title %> </a>
+                        </li>
+                    <% } %>
+                    <% }) %>
+                </ul>
+            </div>
         
     </main>
 

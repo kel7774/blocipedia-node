@@ -31,7 +31,7 @@ module.exports = {
         })
     },
     upgrade(id, callback){
-        return User.findbyId(id)
+        return User.findById(id)
         .then((user) => {
             if(!user){
                 return callback("User not found.");
@@ -42,9 +42,9 @@ module.exports = {
                 })
                 .catch((err) => {
                     callback(err);
-                })
+                });
             }
-        })
+        });
     },
     downgrade(req, callback){
         return User.findById(req.params.id)

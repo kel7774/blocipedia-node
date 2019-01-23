@@ -35,31 +35,41 @@ module.exports = {
             callback(err);
         })
     },
-    deleteWiki(id, callback){
+    deleteWiki(req, callback) {
         return Wiki.findById(req.params.id)
         .then((wiki) => {
-            const authorized = new Authorizer(req.user, wiki).destroy();
-            if(authorized){
-                wiki.destroy()
-                .then((res) => {
-                    callback(null, wiki);
-                });
-            } else {
-                req.flash("notice", "You are not authorized to do that.");
-                callback(401);
-            }
-        })
+          let authorized;
+          if(!req.body.private || req.body.private == 'false') {
+            authorized = new Public(req.user, wiki).destroy();
+          } else {
+            authorized = new Private(req.user, wiki).destroy();
+          }
+          if(authorized) {
+            return wiki.destroy()
+            .then((res) => {
+              callback(null, wiki);
+            })
+          } else {
+            req.flash('notice', 'You are not authorized to do that.');
+            callback(401);
+          } 
+        }) 
         .catch((err) => {
-            callback(err);
-        })
-    },
+          callback(err);
+        });
+      },
     updateWiki(req, updatedWiki, callback){
         return Wiki.findById(req.params.id)
         .then((wiki) => {
             if(!wiki){
-                return callback("Wiki not found");
+                return callback('No wiki found.');
             }
-            const authorized = new Authorizer(req.user, wiki).update();
+            let authorized;
+            if(wiki.private == false){
+                authorized = new Public(req.user, wiki).update();
+            } else {
+                authorized = new Private(req.user, wiki).update();
+            }
             if(authorized){
                 wiki.update(updatedWiki, {
                     fields: Object.keys(updatedWiki)
@@ -72,7 +82,7 @@ module.exports = {
                 });
             } else {
                 req.flash("notice", "You are not authorized to do that.");
-                callback("Forbidden");
+                callback("This action is forbidden.");
             }
         });
     }
