@@ -11,7 +11,8 @@ module.exports = {
         return User.create({
             name: newUser.name,
             email: newUser.email,
-            password: hashedPassword
+            password: hashedPassword,
+            role: 'standard'
         })
         .then((user) => {
             sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -51,9 +52,20 @@ module.exports = {
             if(!user){
                 return callback("User not found");
             } else {
-                return user.update({role: "standard"})
-                .then(() => {
-                    callback(null, user);
+                user.update({role: "standard"})
+                .then((user) => {
+                    Wiki.findAll({where: {userId: user.id}})
+                    .then((wikis) => {
+                        wikis.forEach((wiki) => {
+                            wiki.update({private: false});
+                        })
+                    })
+                    .then(() => {
+                        callback(null, user);
+                    })
+                    .catch((err) => {
+                        callback(err);
+                    })
                 })
                 .catch((err) => {
                     callback(err);

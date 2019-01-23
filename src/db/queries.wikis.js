@@ -1,4 +1,6 @@
 const Wiki = require("./models").Wiki;
+const Public = require("../policies/application.js");
+const Private = require("../policies/wiki.js");
 
 module.exports = {
     getAllWikis(callback){
@@ -13,7 +15,9 @@ module.exports = {
     addWiki(newWiki, callback){
         return Wiki.create({
             title: newWiki.title,
-            body: newWiki.body
+            body: newWiki.body,
+            userId: newWiki.userId,
+            private: newWiki.private
         })
         .then((wiki) => {
             callback(null, wiki);
