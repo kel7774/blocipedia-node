@@ -1,6 +1,6 @@
 const Wiki = require("./models").Wiki;
-const Public = require("../policies/application.js");
-const Private = require("../policies/wiki.js");
+const Public = require("../policies/application");
+const Private = require("../policies/wiki");
 
 module.exports = {
     getAllWikis(callback){
