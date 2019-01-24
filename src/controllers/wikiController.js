@@ -60,15 +60,10 @@ module.exports = {
         });
     },
     destroy(req, res, next){
-        console.log("Destroying wiki with ID " + req.params.id);
-        console.log(req.params);
-        wikiQueries.deleteWiki(req.params.id, (err, wiki) => {
+        wikiQueries.deleteWiki(req, (err, wiki) => {
             if(err){
-                console.log("There was an error");
-                console.log(err);
-                res.redirect(500, `/wikis/${wiki.id}`);
+                res.redirect(500, `/wikis`);
             } else {
-                console.log("Destroyed wiki, redirecting");
                 res.redirect(303, `/wikis`);
             }
         });
