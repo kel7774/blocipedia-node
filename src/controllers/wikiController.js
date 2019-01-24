@@ -1,6 +1,6 @@
 const wikiQueries = require("../db/queries.wikis.js");
 const Authorizer = require("../policies/application.js");
-const Private = require("../policies/wiki");
+const Private = require("../policies/wiki.js");
 
 module.exports = {
     index(req, res, next){
@@ -39,7 +39,7 @@ module.exports = {
             });
         } else {
             req.flash("notice", "You are not authorized to do that.");
-            res.redirect("/wikis");
+            res.redirect(`/wikis`);
         }
     },
     show(req, res, next){
@@ -60,9 +60,9 @@ module.exports = {
         });
     },
     destroy(req, res, next){
-        wikiQueries.deleteWiki(req, (err, wiki) => {
+        wikiQueries.deleteWiki(req.params.id, (err, wiki) => {
             if(err){
-                res.redirect(500, `/wikis/${req.params.id}`);
+                res.redirect(500, `/wikis/${wiki.id}`);
             } else {
                 res.redirect(303, "/wikis");
             }
@@ -74,7 +74,7 @@ module.exports = {
             if(wiki.private == true){
                 authorized = new Private(req.user, wiki).edit();
             } else {
-                authorized = new Authorizer(req.user, wiki).edit()
+                authorized = new Authorizer(req.user, wiki).edit();
             }
             if(authorized){
                 wikiQueries.getWiki(req.params.id, (err, wiki) => {
@@ -86,7 +86,7 @@ module.exports = {
                 });
             } else {
                 req.flash("notice", "You are not authorized to do that.");
-                res.redirect(`wikis/${wiki.id}`);
+                res.redirect(`/wikis/${wiki.id}`);
             }
         })
     },
@@ -97,6 +97,6 @@ module.exports = {
             } else {
                 res.redirect(`/wikis/${req.params.id}`);
             }
-        })
+        });
     }
 }
