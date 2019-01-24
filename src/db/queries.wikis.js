@@ -53,7 +53,7 @@ module.exports = {
             req.flash('notice', 'You are not authorized to do that.');
             callback(401);
           } 
-        }) 
+        })
         .catch((err) => {
           callback(err);
         });

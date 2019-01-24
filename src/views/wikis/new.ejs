@@ -20,6 +20,16 @@
             <label for="description">Description</label>
             <textarea rows="4" class="form-control" name="body" placeholder="Enter Description"></textarea>
         </div>
+        <% if(currentUser) { %>
+          <% if(currentUser.isAdmin() || currentUser.isPremium()) { %>
+            <div class="make-private">
+            <input class="private-input" name="private" type="checkbox" value="true" id="private">
+            <label class="private-label" for="private">
+              Check to make <strong>Private</strong>
+            </label>
+            </div>
+          <% } %>
+        <% } %>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
 
