@@ -60,8 +60,10 @@ module.exports = {
         });
     },
     destroy(req, res, next){
+        console.log(req.params);
         wikiQueries.deleteWiki(req, (err, wiki) => {
             if(err){
+                console.log(err);
                 res.redirect(500, `/wikis`);
             } else {
                 res.redirect(303, `/wikis`);
