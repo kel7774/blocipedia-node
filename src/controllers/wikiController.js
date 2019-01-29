@@ -1,6 +1,5 @@
 const wikiQueries = require("../db/queries.wikis.js");
-const Authorizer = require("../policies/application.js");
-const Private = require("../policies/wiki.js");
+const Authorizer = require("../policies/wiki.js");
 
 module.exports = {
     index(req, res, next){
@@ -47,7 +46,7 @@ module.exports = {
             if(err || wiki == null){
                 res.redirect(404, "/");
             } else if(wiki.private == true){
-                const authorized = new Authorizer(req.user).show();
+                const authorized = new Authorizer(req.user, wiki).show();
                 if(authorized){
                     res.render('wikis/show', {wiki});
                 } else {
@@ -60,11 +59,9 @@ module.exports = {
         });
     },
     destroy(req, res, next){
-        console.log(req.params);
         wikiQueries.deleteWiki(req, (err, wiki) => {
             if(err){
-                console.log(err);
-                res.redirect(500, `/wikis`);
+                res.redirect(err, `/wikis/${wiki.id}`);
             } else {
                 res.redirect(303, `/wikis`);
             }
@@ -74,7 +71,7 @@ module.exports = {
         wikiQueries.getWiki(req.params.id, (err, wiki) => {
             let authorized;
             if(wiki.private == true){
-                authorized = new Private(req.user, wiki).edit();
+                authorized = new Authorizer(req.user, wiki).edit();
             } else {
                 authorized = new Authorizer(req.user, wiki).edit();
             }

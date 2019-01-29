@@ -22,7 +22,7 @@
           <textarea rows="4" class="form-control" name="body" placeholder="Enter Description"><%= wiki.body %></textarea>
         </div>
 
-        <<% if(currentUser) { %>
+        <% if(currentUser) { %>
           <% if(currentUser.id === wiki.userId && (currentUser.isAdmin() || currentUser.isPremium())) { %>
             <div class="check-private">
               <% if(wiki.private == true) { %>
