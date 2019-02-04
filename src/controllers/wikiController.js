@@ -1,5 +1,6 @@
 const wikiQueries = require("../db/queries.wikis.js");
-const Authorizer = require("../policies/wiki.js");
+const Private = require("../policies/wiki.js");
+const Authorized = require("../policies/application.js");
 const markdown = require( "markdown" ).markdown;
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
         })
     },
     new(req, res, next){
-        const authorized = new Authorizer(req.user).new();
+        const authorized = new Authorized(req.user).new();
         if(authorized){
             res.render("wikis/new");
         } else {
@@ -22,7 +23,7 @@ module.exports = {
         }
     },
     create(req, res, next){
-        const authorized = new Authorizer(req.user).create();
+        const authorized = new Authorized(req.user).create();
         if(authorized){
             let newWiki = {
                 title: req.body.title,
@@ -47,8 +48,8 @@ module.exports = {
             if(err || wiki == null){
                 res.redirect(404, "/");
             } else if(wiki.private == true){
-                const authorized = new Authorizer(req.user, wiki).show();
-                if(authorized){
+                const private = new Private(req.user, wiki).show();
+                if(private){
                     res.render('wikis/show', {wiki});
                 } else {
                     req.flash("notice", "You are not authorized to view this wiki");
@@ -72,9 +73,9 @@ module.exports = {
         wikiQueries.getWiki(req.params.id, (err, wiki) => {
             let authorized;
             if(wiki.private == true){
-                authorized = new Authorizer(req.user, wiki).edit();
+                authorized = new Private(req.user, wiki).edit();
             } else {
-                authorized = new Authorizer(req.user, wiki).edit();
+                authorized = new Authorized(req.user, wiki).edit();
             }
             if(authorized){
                 wikiQueries.getWiki(req.params.id, (err, wiki) => {
