@@ -1,6 +1,7 @@
 const Wiki = require("./models").Wiki;
 const Public = require("../policies/application");
 const Private = require("../policies/wiki");
+const Collaborator = require("./models").Collaborator;
 
 module.exports = {
     getAllWikis(callback){
@@ -27,9 +28,19 @@ module.exports = {
         })
     },
     getWiki(id, callback){
+        let result = {};
         return Wiki.findById(id)
         .then((wiki) => {
-            callback(null, wiki);
+            if(!wiki){
+                callback(404);
+            } else {
+                result["wiki"] = wiki;
+                Collaborator.scope({method: ["collaboratorsFor", id]}).all()
+                .then((collaborators) => {
+                    result["collaborators"] = collaborators;
+                    callback(null, result);
+                })
+            }
         })
         .catch((err) => {
             callback(err);

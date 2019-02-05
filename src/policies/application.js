@@ -3,6 +3,7 @@ module.exports = class ApplicationPolicy {
      constructor(user, record) {
        this.user = user;
        this.record = record;
+       this.collaborators = collaborators;
      }
    
      _isOwner() {
