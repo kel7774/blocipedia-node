@@ -1,6 +1,8 @@
 const Wiki = require("./models").Wiki;
-const Public = require("../policies/application");
+const User = require("./models").User;
+const Sequelize = require("sequelize");
 const Private = require("../policies/wiki");
+const Public = require("../policies/application");
 const Collaborator = require("./models").Collaborator;
 
 module.exports = {
@@ -13,7 +15,7 @@ module.exports = {
             callback(err);
         })
     },
-    addWiki(newWiki, callback){
+    addWiki(newWiki, callback) {
         return Wiki.create({
             title: newWiki.title,
             body: newWiki.body,

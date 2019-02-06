@@ -10,7 +10,7 @@ describe("routes : collaborators", () => {
     beforeEach((done) => {
         sequelize.sync({force: true}).then((res) => {
             User.create({
-                username: "starman",
+                name: "starman",
                 email: "starman@tesla.com",
                 password: "Trekkie4lyfe"
             })
