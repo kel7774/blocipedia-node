@@ -48,6 +48,7 @@ module.exports = {
             if(err || wiki == null){
                 res.redirect(404, "/");
             } else if(wiki.private == true){
+                wiki.body = markdown.toHTML(wiki.body);
                 const private = new Private(req.user, wiki).show();
                 if(private){
                     res.render('wikis/show', {wiki});
@@ -56,6 +57,7 @@ module.exports = {
                     res.redirect('/wikis');
                 }
             } else {
+                wiki.body = markdown.toHTML(wiki.body);
                 res.render("wikis/show", {wiki});
             }
         });
