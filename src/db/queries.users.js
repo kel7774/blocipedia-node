@@ -30,16 +30,16 @@ module.exports = {
             callback(err);
         })
     },
-    isRepeatEmail(name, callback){
+    isRepeatEmail(email, callback){
         User.findAll({
             where: {
-                name: name
+                email: email
             }
         }).then((user) => {
             if(!user){
-                return true;
+                callback(null, null);
             } else {
-                return false;
+                callback(null, user);
             }
         })
         .catch((err) => {

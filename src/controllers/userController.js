@@ -13,20 +13,20 @@ module.exports = {
             password: req.body.password,
             password_conf: req.body.password_conf
         };
-        userQueries.isRepeatEmail(newUser.email, (err, user) => {
-            if(err){
-                req.flash("error", err);
-                res.redirect("/users/sign_in");
-            } else if (newUser.email) {
-                req.flash("notice", "You already have an account. Please sign in.");
-                res.redirect("/users/sign_in");
-            }
-        });
         userQueries.createUser(newUser, (err, user) => {
             if(err){
                 req.flash("error", err);
                 res.redirect("/users/sign_up");
-            } else  {
+            } 
+            else if(userQueries.isRepeatEmail(newUser.email, (err, user) => {
+                if(err){
+                    req.flash("error", err);
+                    res.redirect("/users/sign_in");
+                } else if (user) {
+                    req.flash("notice", "You already have an account. Please sign in.");
+                    res.redirect("/users/sign_in");
+                }
+            })) ;else  {
                 passport.authenticate("local")(req, res, () => {
                     req.flash("notice", "You've successfully signed in!");
                     res.redirect("/");
