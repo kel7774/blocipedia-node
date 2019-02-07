@@ -4,6 +4,9 @@ const wikiQueries = require("../db/queries.wikis");
 
 module.exports = {
     show(req, res, next){
+//get a list of all collaborator objects assc with req.params.userId
+ //query Collaborator.where({userId: req.params.userId})
+ //render the result. 
         wikiQueries.getWiki(req.params.wikiId, (err, result) => {
             wiki = result["wiki"];
             collaborators = result["collaborators"];

@@ -12,13 +12,13 @@
         <% include ../static/partials/messages.ejs %>
         <h1>Collaborators for <%= wiki.title %></h1>
 
-        <h4> Add Collaborator</h4>
+        <h4>Add Collaborator</h4>
 
         <% if(currentUser && (currentUser.role === "premium" || currentUser.role === "admin")) { %>
         <form style="width:25%" action="/wikis/<%= wiki.id %>/collaborators/create" method="post">
             <div class="input-group">
                 <input type="text" class="form-control" name="name" placeholder="Enter email">
-                <button type="submit" class="btn btn-secondary">Add</button>
+                <button type="submit" class="btn btn-secondary">Add Collaborator</button>
             </div>
         </form>
         <% } %>
@@ -30,7 +30,7 @@
                     <%= collaborator.User.name %>
                 </h4>
                 <% if(currentUser && (currentUser.role === "premium" || currentUser.role === "admin")) { %>
-                <form action="/wikis/<%= wiki.id %>/collaborators/delete" method="post">
+                <form action="/wikis/<%= wiki.id %>/collaborators/destroy" method="post">
                     <button type="submit" class="btn btn-danger">Delete</button>
                     <input type="hidden" value="<%= collaborator.User.id %>" class="form-control" name="collaborator">
                 </form>
