@@ -1,6 +1,9 @@
 const Wiki = require("./models").Wiki;
-const Public = require("../policies/application");
+const User = require("./models").User;
+const Sequelize = require("sequelize");
 const Private = require("../policies/wiki");
+const Public = require("../policies/application");
+const Collaborator = require("./models").Collaborator;
 
 module.exports = {
     getAllWikis(callback){
@@ -12,7 +15,7 @@ module.exports = {
             callback(err);
         })
     },
-    addWiki(newWiki, callback){
+    addWiki(newWiki, callback) {
         return Wiki.create({
             title: newWiki.title,
             body: newWiki.body,
@@ -27,9 +30,19 @@ module.exports = {
         })
     },
     getWiki(id, callback){
+        let result = {};
         return Wiki.findById(id)
         .then((wiki) => {
-            callback(null, wiki);
+            if(!wiki){
+                callback(404);
+            } else {
+                result["wiki"] = wiki;
+                Collaborator.scope({method: ["collaboratorsFor", id]}).all()
+                .then((collaborators) => {
+                    result["collaborators"] = collaborators;
+                    callback(null, result);
+                })
+            }
         })
         .catch((err) => {
             callback(err);

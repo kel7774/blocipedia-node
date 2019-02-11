@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "userId",
       as: "wikis"
     });
+    User.hasMany(models.Collaborator, {
+      foreignKey: "userId",
+      as: "collaborators"
+    });
   };
   User.prototype.isAdmin = function(){
     return this.role === "admin";
@@ -35,6 +39,11 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.isPremium = function(){
     return this.role === 'premium';
   };
-  
+  User.prototype.isOwner = function(){
+    return this.role === "owner";
+  }
+  User.prototype.isStandard = function(){
+    return this.role = "standard";
+  }
   return User;
 };

@@ -84,7 +84,7 @@ module.exports = {
                     if(err || wiki == null){
                         res.redirect(404, `/wikis`);
                     } else {
-                        res.render('wikis/edit', {wiki});
+                        res.render("wikis/edit", {wiki});
                     }
                 });
             } else {

@@ -1,5 +1,5 @@
 const User = require("./models").User;
-const Wiki = require("./models").Wiki;
+const Collaborator = require("./models").Collaborator;
 const bcrypt = require("bcryptjs");
 const sgMail = require("@sendgrid/mail");
 
@@ -74,16 +74,24 @@ module.exports = {
         });
     },
     getUser(id, callback){
-        return User.findById(id, {
-            include: [
-                {model: Wiki, as:"wikis"}
-            ]
-        })
+        let result = {};
+        User.findById(id)
         .then((user) => {
-            callback(null, user);
+            if(!user){
+                callback(404);
+            } else {
+                result["user"] = user;
+                Collaborator.scope({
+                    method: ["userCollaborationsFor", id]
+                }).all()
+                .then((collaborations) => {
+                    result["collaborations"] = collaborations;
+                    callback(null, result);
+                })
+                .catch((err) => {
+                    callback(err);
+                })
+            }
         })
-        .catch((err) => {
-            callback(err);
-        });
     }
 }

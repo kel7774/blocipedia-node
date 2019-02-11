@@ -7,7 +7,7 @@ module.exports = class WikiPolicy extends ApplicationPolicy {
   }
 
   show(){
-      return this._isAdmin() || this._isOwner();
+      return this._isStandard() || this._isAdmin() || this._isOwner();
   }
 
   create() {
@@ -15,7 +15,7 @@ module.exports = class WikiPolicy extends ApplicationPolicy {
   }
 
   edit() {
-    return this.show();
+    return this._isStandard() || this._isAdmin() || this._isPremium();
   }
 
   update() {
@@ -23,6 +23,6 @@ module.exports = class WikiPolicy extends ApplicationPolicy {
   }
 
   destroy() {
-    return this.update();
+    return this._isOwner() || this._isAdmin();
   }
 }
