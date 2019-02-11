@@ -1,6 +1,8 @@
 const userQueries = require("../db/queries.users.js");
 const passport = require("passport");
 const stripe = require("stripe")("pk_test_3qsvchieID6iBgXIBFaIm5mW");
+const flash = require("express-flash");
+const express = require("express");
 
 module.exports = {
     signUp(req, res, next){
@@ -15,19 +17,25 @@ module.exports = {
         };
         userQueries.createUser(newUser, (err, user) => {
             if(err){
-                req.flash("error", err);
+                console.log(err);
+                console.log("There was an error creating the user, redirecting to signup page");
+                req.flash("error", "A user already exists with this email.");
                 res.redirect("/users/sign_up");
             } else if(newUser == user){
+                console.log("newUser is equal to user");
                 userQueries.isRepeatEmail(newUser.email, (err, user) => {
                     if(err){
+                        console.log("Checking if email is a repeat.");
                         req.flash("error", err);
                         res.redirect("/users/sign_up");
                     } else {
+                        console.log("That user already exists, redirecting to sign in page");
                         req.flash("notice", "You already have an account. Please sign in.");
                         res.redirect("/users/sign_in");
                     }
                 })
             } else {
+                console.log("newUser is not equal to user");
                 passport.authenticate("local")(req, res, () => {
                     req.flash("notice", "You've successfully signed in!");
                     res.redirect("/");
