@@ -15,24 +15,25 @@ module.exports = {
         };
         userQueries.createUser(newUser, (err, user) => {
             if(err){
-                req.flash("notice", err);
-                res.redirect("/users/sign_in");
-            } else if(newUser){
-                passport.authenticate("local")(req, res, () => {
-                    req.flash("notice", "You've successfully signed in!");
-                    res.redirect("/");
-                })
-            } else {
+                req.flash("error", err);
+                res.redirect("/users/sign_up");
+            } else if(newUser == user){
                 userQueries.isRepeatEmail(newUser.email, (err, user) => {
                     if(err){
                         req.flash("error", err);
-                        res.redirect("/users/sign_in");
+                        res.redirect("/users/sign_up");
                     } else {
                         req.flash("notice", "You already have an account. Please sign in.");
                         res.redirect("/users/sign_in");
                     }
                 })
+            } else {
+                passport.authenticate("local")(req, res, () => {
+                    req.flash("notice", "You've successfully signed in!");
+                    res.redirect("/");
+                })
             }
+        })
     },
     signInForm(req, res, next){
         res.render("users/sign_in");
