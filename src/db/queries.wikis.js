@@ -1,9 +1,9 @@
 const Wiki = require("./models").Wiki;
 const User = require("./models").User;
-const Sequelize = require("sequelize");
+const Collaborator = require("./models").Collaborator;
 const Private = require("../policies/wiki");
 const Public = require("../policies/application");
-const Collaborator = require("./models").Collaborator;
+
 
 module.exports = {
     getAllWikis(callback){
@@ -30,23 +30,13 @@ module.exports = {
         })
     },
     getWiki(id, callback){
-        let result = {};
-        return Wiki.findById(id)
-        .then((wiki) => {
-            if(!wiki){
-                callback(404);
-            } else {
-                result["wiki"] = wiki;
-                Collaborator.scope({method: ["collaboratorsFor", id]}).all()
-                .then((collaborators) => {
-                    result["collaborators"] = collaborators;
-                    callback(null, result);
-                })
-            }
-        })
-        .catch((err) => {
-            callback(err);
-        })
+       return Wiki.findById(id)
+       .then((wiki) => {
+           callback(null, wiki);
+       })
+       .catch((err) => {
+           callback(err);
+       })
     },
     deleteWiki(req, callback) {
         return Wiki.findById(req.params.id)
@@ -71,8 +61,13 @@ module.exports = {
             callback(err);
         })
       },
-    updateWiki(req, updatedWiki, callback){
-        return Wiki.findById(req.params.id)
+      updateWiki(req, updatedWiki, callback){
+        return Wiki.findById(req.params.id, {
+            include: [{
+                model: Collaborator,
+                as: "collaborators"
+            }]
+        })
         .then((wiki) => {
             if(!wiki){
                 return callback('No wiki found.');
@@ -86,6 +81,21 @@ module.exports = {
             if(authorized){
                 wiki.update(updatedWiki, {
                     fields: Object.keys(updatedWiki)
+                })
+                .then((wiki) => {
+                    User.findAll({where: {name: updatedWiki.collaborator}})
+                    .then((user) => {
+                        Collaborator.create({
+                            userId: user.id,
+                            wikiId: wiki.id
+                        })
+                        .then(() => {
+                            callback(null, user);
+                        })
+                        .catch((err) => {
+                            callback(err);
+                        })
+                    })
                 })
                 .then(() => {
                     callback(null, wiki);

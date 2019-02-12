@@ -1,9 +1,32 @@
 const collaboratorQueries = require("../../src/db/queries.collaborators.js");
-const Authorized = require("../policies/application");
-const wikiQueries = require("../db/queries.wikis");
+const wikiQueries = require("../../src/db/queries.wikis.js");
 
 module.exports = {
-//get a list of all collaborator objects assc with req.params.userId
- //query Collaborator.where({userId: req.params.userId})
- //render the result. 
+    show(req, res, next){
+        collaboratorQueries.getAll((err, users) => {
+            if(err){
+                res.redirect(500, "static/index");
+            } else {
+                res.render("collaborators/show", {users});
+            }
+        });
+    },
+    newForm(req, res, next){
+        res.render("collaborators/show");
+    },
+    create(req, res, next){
+        let newCollab = {
+            userId: req.body.userId,
+            wikiId: req.body.wikiId
+        };
+        collaboratorQueries.addCollaborator(newCollab, (err, collaborator) => {
+            if(err){
+                req.flash("error", err);
+                res.redirect(500, "collaborators/show");
+            } else {
+                req.flash("notice", "You have been added as a collaborator");
+                res.redirect("/wikis/:id/collaborators");
+            }
+        });
+    }
 }
