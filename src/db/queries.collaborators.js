@@ -2,19 +2,16 @@ const Collaborator = require("./models").Collaborator;
 const User = require("./models").User;
 
 module.exports = {
-    getAll(callback){
-        return User.all({
-            include: [{
-                model: Collaborator,
-                as: "collaborators"
-            }]
-        })
-        .then((users) => {
-            callback(null, users);
+    getAll(wikiId, callback){
+        return Collaborator.findAll(
+            {where: {wikiId: wikiId}}
+        )
+        .then((collaborators) => {
+            callback(null, collaborators);
         })
         .catch((err) => {
             callback(err);
-        });
+        })
     },
     addCollaborator(newCollab, callback){
         return Collaborator.create({
@@ -29,6 +26,6 @@ module.exports = {
         });
     },
     removeCollaborator(req, collaboratorInfo, callback){
-        
+
     }
 }

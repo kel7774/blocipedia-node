@@ -24,6 +24,7 @@
 
         <% if(currentUser) { %>
           <% if(currentUser.id === wiki.userId && (currentUser.isAdmin() || currentUser.isPremium())) { %>
+
             <div class="check-private">
               <% if(wiki.private == true) { %>
                 <input class="form-input" checked='checked' name="private" type="checkbox" value="true" id="privateWiki">
@@ -34,7 +35,12 @@
                   Private Wiki
                 </label>
             </div>
-            <a href="/wikis/<%= wiki.id %>/collaborators" class="btn btn-warning">Add Collaborator</a>
+
+            <div class="form-group">
+                <label for="title">Add Collaborator</label>
+                <input type="text" class="form-control" name="collaborator" aria-describedby="titleHelp" placeholder="Username">
+            </div>
+            
           <% } %>
         <% } %>
 

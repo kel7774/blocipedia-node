@@ -17,8 +17,18 @@
         <button type="submit" class="btn btn-danger">Delete</button>
       </form>
 
-      <% if(wiki.private === true && (currentUser.isPremium() || currentUser.isAdmin())) { %>
-        <a href="/wikis/<%= wiki.id %>/collaborators" class="btn btn-info">Edit Collaborators</a>
+      <p><%- wiki.body %></p>
+
+      <h4>Collaborators</h4>
+
+      <% if(wiki.collaborators.length == 0) {%>
+        <p>No Collaborators</p>
+      <% } else { %>
+        <a href="/wikis/<%= wiki.id %>/collaborators" class='float-left'>
+          <% wiki.collaborators.forEach((user) => { %>
+            &nbsp<%= user.collabName %>&nbsp|
+          <% }) %>
+        </a>
       <% } %>
 
     </main>

@@ -3,11 +3,11 @@ const wikiQueries = require("../../src/db/queries.wikis.js");
 
 module.exports = {
     show(req, res, next){
-        collaboratorQueries.getAll((err, users) => {
+        collaboratorQueries.getAll(req.params.id, (err, collaborators) => {
             if(err){
                 res.redirect(500, "static/index");
             } else {
-                res.render("collaborators/show", {users});
+                res.render("collaborators/show", {collaborators});
             }
         });
     },

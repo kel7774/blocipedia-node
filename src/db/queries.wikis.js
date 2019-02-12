@@ -30,7 +30,11 @@ module.exports = {
         })
     },
     getWiki(id, callback){
-       return Wiki.findById(id)
+       return Wiki.findById(id, {
+           include: [{
+               model: Collaborator, as: "collaborators"
+           }]
+       })
        .then((wiki) => {
            callback(null, wiki);
        })
@@ -83,7 +87,7 @@ module.exports = {
                     fields: Object.keys(updatedWiki)
                 })
                 .then((wiki) => {
-                    User.findAll({where: {name: updatedWiki.collaborator}})
+                    User.findOne({where: {name: updatedWiki.collaborator}})
                     .then((user) => {
                         Collaborator.create({
                             userId: user.id,
