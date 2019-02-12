@@ -1,4 +1,5 @@
 const collaboratorQueries = require("../../src/db/queries.collaborators.js");
+const User = require("../db/models").User;
 const wikiQueries = require("../../src/db/queries.wikis.js");
 
 module.exports = {
@@ -28,5 +29,19 @@ module.exports = {
                 res.redirect("/wikis/:id/collaborators");
             }
         });
+    },
+    destroy(req, res, next){
+        if(req.user){
+            collaboratorQueries.removeCollaborator(req.params.id, req,body.collabName, (err, collaborator) => {
+                if(err){
+                    req.flash("error", err);
+                }
+                req.flash("notice", "They have been removed as a collaborator.");
+                res.redirect(req.headers.referer);
+            });
+        } else {
+            req.flash("notice", "You must be signed in to do that.");
+            res.redirect(req.headers.referer);
+        }
     }
 }

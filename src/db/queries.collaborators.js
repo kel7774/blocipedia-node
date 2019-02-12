@@ -1,5 +1,4 @@
 const Collaborator = require("./models").Collaborator;
-const User = require("./models").User;
 
 module.exports = {
     getAll(wikiId, callback){
@@ -25,7 +24,32 @@ module.exports = {
             callback(err);
         });
     },
-    removeCollaborator(req, collaboratorInfo, callback){
-
+    removeCollaborator(req, collabName, callback){
+        return Collaborator.findOne({
+            where: {
+                wikidId: wikiId,
+                collabName: collabName
+            }
+        })
+        .then((collab) => {
+            if(collab){
+                Collaborator.destroy({
+                    where: {
+                        id: collab.id
+                    }
+                })
+                .then((collab) => {
+                    callback(null, collab);
+                })
+                .catch((err) => {
+                    callback(err);
+                })
+            } else {
+                callback("error", "Collaborator no longer exists for this wiki.");    
+            }
+        })
+        .catch((err) => {
+            callback(err);
+        })
     }
 }

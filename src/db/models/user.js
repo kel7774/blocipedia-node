@@ -45,5 +45,14 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.isStandard = function(){
     return this.role = "standard";
   }
+  User.prototype.isCollaborator = function(user, record){
+    let collab = 0;
+    record.collaborators.forEach((collab) => {
+      if(collab.userId == user.id){
+        collab++;
+      }
+    });
+    return collab > 0;
+  }
   return User;
 };

@@ -66,22 +66,19 @@ module.exports = {
         })
       },
       updateWiki(req, updatedWiki, callback){
-        return Wiki.findById(req.params.id, {
-            include: [{
-                model: Collaborator,
-                as: "collaborators"
-            }]
-        })
+        return Wiki.findById(req.params.id)
         .then((wiki) => {
             if(!wiki){
-                return callback('No wiki found.');
+                return callback("Wiki not found.");
             }
+
             let authorized;
             if(wiki.private == false){
                 authorized = new Public(req.user, wiki).update();
             } else {
                 authorized = new Private(req.user, wiki).update();
             }
+
             if(authorized){
                 wiki.update(updatedWiki, {
                     fields: Object.keys(updatedWiki)
@@ -89,27 +86,30 @@ module.exports = {
                 .then((wiki) => {
                     User.findOne({where: {name: updatedWiki.collaborator}})
                     .then((user) => {
-                        Collaborator.create({
-                            userId: user.id,
-                            wikiId: wiki.id
-                        })
-                        .then(() => {
+                        if(!user){
+                            Collaborator.create({
+                                userId: user.id,
+                                wikiId: wiki.id,
+                                collabName: user.name
+                            })
+                            .then((user) => {
+                                callback(null, user);
+                            })
+                            .catch((err) => {
+                                callback(err);
+                            });
+                        } else {
+                            req.flash("notice", `${user.name} is already a collaborator on this wiki.`);
                             callback(null, user);
-                        })
-                        .catch((err) => {
-                            callback(err);
-                        })
-                    })
-                })
-                .then(() => {
-                    callback(null, wiki);
+                        }
+                    });
                 })
                 .catch((err) => {
                     callback(err);
                 });
             } else {
                 req.flash("notice", "You are not authorized to do that.");
-                callback("This action is forbidden.");
+                callback("That action is forbidden.");
             }
         });
     }

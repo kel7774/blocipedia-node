@@ -26,7 +26,7 @@
       <% } else { %>
         <a href="/wikis/<%= wiki.id %>/collaborators" class='float-left'>
           <% wiki.collaborators.forEach((user) => { %>
-            &nbsp<%= user.collabName %>&nbsp|
+            <%= user.collabName %>
           <% }) %>
         </a>
       <% } %>
