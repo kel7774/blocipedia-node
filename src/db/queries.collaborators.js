@@ -12,18 +12,6 @@ module.exports = {
             callback(err);
         })
     },
-    addCollaborator(newCollab, callback){
-        return Collaborator.create({
-            userId: newCollab.userId,
-            wikiId: newCollab.wikiId
-        })
-        .then((collaborator) => {
-            callback(null, collaborator);
-        })
-        .catch((err) => {
-            callback(err);
-        });
-    },
     removeCollaborator(req, collabName, callback){
         return Collaborator.findOne({
             where: {
@@ -31,15 +19,15 @@ module.exports = {
                 collabName: collabName
             }
         })
-        .then((collab) => {
-            if(collab){
+        .then((collaborator) => {
+            if(collaborator){
                 Collaborator.destroy({
                     where: {
-                        id: collab.id
+                        id: collaborator.id
                     }
                 })
-                .then((collab) => {
-                    callback(null, collab);
+                .then((collaborator) => {
+                    callback(null, collaborator);
                 })
                 .catch((err) => {
                     callback(err);
