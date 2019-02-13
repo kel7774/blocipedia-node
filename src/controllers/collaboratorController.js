@@ -1,4 +1,5 @@
 const collaboratorQueries = require("../../src/db/queries.collaborators.js");
+const Authorized = require("../policies/application");
 
 module.exports = {
     add(req, res, next){
@@ -17,16 +18,18 @@ module.exports = {
     },
     remove(req, res, next){
         if(req.user){
-            collaboratorQueries.removeCollaborator(req.params.id, req,body.collabName, (err, collaborator) => {
-                if(err){
-                    req.flash("error", err);
-                }
-                req.flash("notice", "They have been removed as a collaborator.");
+            const authorized = new Authorized(req.params.userId).destroy();
+            if(authorized){
+                collaboratorQueries.removeCollaborator(req, (err, collaborator) => {
+                    if(err){
+                        req.flash("error", err);
+                    }
+                    res.redirect(req.headers.referer);
+                })
+            } else {
+                req.flash("notice", "Sign in to complete this action.");
                 res.redirect(req.headers.referer);
-            });
-        } else {
-            req.flash("notice", "You must be signed in to do that.");
-            res.redirect(req.headers.referer);
+            }
         }
     }
 }
