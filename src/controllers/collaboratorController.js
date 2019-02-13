@@ -21,6 +21,7 @@ module.exports = {
             collaboratorQueries.removeCollaborator(req, (err, collaborator) => {
                 if(err){
                     console.log(err);
+                    console.log(user);
                     req.flash("error", err);
                 }
                 req.flash("notice", "This user has been removed as a collaborator");

@@ -51,14 +51,15 @@ module.exports = {
     removeCollaborator(req, callback){
         Collaborator.destroy({
             where: {
-                userId: userId,
-                wikiId: wikiId
+                userId: req.params.userId
             }
         })
         .then((deleted) => {
+            console.log(deleted);
             callback(null, deleted);
         })
         .catch((err) => {
+            console.log(err);
             callback(err);
         });
     }
