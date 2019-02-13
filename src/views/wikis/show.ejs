@@ -23,7 +23,7 @@
     <% } %>
 
     <% if(currentUser) { %>
-    <% if(currentUser.id === wiki.userId || (currentUser.isAdmin() || currentUser.isPremium())) { %>
+    <% if(currentUser.isAdmin() || currentUser.isPremium() && currentUser.id == wiki.userId && wiki.private) { %>
       <form action="/wikis/<%= wiki.id %>/collaborators/add" method="post">
             <label for="addCollaborator">You may add collaborators to this wiki</label>
             <input style="width:300px" type="text" class="form-control" name="addCollaborator" aria-describedby="addCollaboratorHelp"
