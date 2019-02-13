@@ -12,6 +12,18 @@ module.exports = {
             callback(err);
         })
     },
+    addCollaborator(newCollab, callback){
+        return Collaborator.create({
+            userId: newCollab.userId,
+            wikiId: newCollab.wikiId
+        })
+        .then((collaborator) => {
+            callback(null, collaborator);
+        })
+        .catch((err) => {
+            callback(err);
+        })
+    },
     removeCollaborator(req, collabName, callback){
         return Collaborator.findOne({
             where: {

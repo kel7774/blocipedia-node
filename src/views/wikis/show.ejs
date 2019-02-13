@@ -6,32 +6,47 @@
   <body>
     <% include ../static/partials/navbar.ejs %>
 
-    <main class="container">
+    <main class="container col-12 m-2">
 
-      <h1><%= wiki.title %></h1>
+      <h1><%- wiki.title %></h1>
+      <p><%- wiki.body %></p>
 
+    <% if(currentUser && currentUser.id == wiki.userId) { %>
       <a href="/wikis/<%= wiki.id %>/edit" class="btn btn-warning">Edit</a>
-
-    
       <form style="display:initial" action="/wikis/<%= wiki.id %>/destroy" method="post">
         <button type="submit" class="btn btn-danger">Delete</button>
       </form>
+    <% } %>
 
-      <p><%- wiki.body %></p>
+  <% if(currentUser && currentUser.id != wiki.userId) { %>
+      <a href="/wikis/<%= wiki.id %>/edit" class="btn btn-warning">Edit</a>
+    <% } %>
 
-      <h4>Collaborators</h4>
+    <% if(currentUser) { %>
+    <% if(currentUser.id === wiki.userId || (currentUser.isAdmin() || currentUser.isPremium())) { %>
+      <form action="/wikis/<%= wiki.id %>/collaborators/new" method="post">
+            <label for="addCollaborator">You may add collaborators to this wiki</label>
+            <input style="width:300px" type="text" class="form-control" name="addCollaborator" aria-describedby="addCollaboratorHelp"
+                placeholder="Enter user's email here">
+        <button type="submit" class="btn btn-primary">Add Collaborator</button>
+    </form>
 
-      <% if(wiki.collaborators.length == 0) {%>
-        <p>No Collaborators</p>
-      <% } else { %>
-        <a href="/wikis/<%= wiki.id %>/collaborators" class='float-left'>
-          <% wiki.collaborators.forEach((user) => { %>
-            <%= user.collabName %>
-          <% }) %>
-        </a>
-      <% } %>
+  <h3>Collaborators</h3>
+  <ul class="list-group">
+    <% wiki.collaborators.forEach((collaborator) => { %>
+    <li class="list-group-item">
+        <%= collaborator.userId %>
+        <form style="display:initial" action="/wikis/<%= wiki.id %>/collaborators/<%= collaborator.userId %>/destroy" method="post">
+            <button type="submit" class="btn btn-danger">Remove</button>
+        </form>
+    </li>
+    <% }) %>
+</ul>
+    </section>
+  <% } %>
+ <% } %>
+</main>
 
-    </main>
 
     <% include ../static/partials/baseScripts.ejs %>
 

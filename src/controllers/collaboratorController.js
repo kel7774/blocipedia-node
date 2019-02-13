@@ -10,6 +10,21 @@ module.exports = {
             }
         });
     },
+    create(req, res, next){
+        let newCollab = {
+            userId: req.body.userId,
+            wikiId: req.body.wikiId
+        };
+        collaboratorQueries.addCollaborator(newCollab, (err, collaborator) => {
+            if(err) {
+                req.flash("error", err);
+                res.redirect(500, "collaborators/show");
+            } else {
+                req.flash("notice", "Added as a collaborator");
+                res.redirect("/wikis/:id/collaborators");
+            }
+        });
+    },
     destroy(req, res, next){
         if(req.user){
             collaboratorQueries.removeCollaborator(req.params.id, req,body.collabName, (err, collaborator) => {

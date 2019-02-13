@@ -84,9 +84,9 @@ module.exports = {
                     fields: Object.keys(updatedWiki)
                 })
                 .then((wiki) => {
-                    User.findOne({where: {name: updatedWiki.collaborator}})
+                    User.findOne({where: {name: wiki.collaborator}})
                     .then((user) => {
-                        if(!user){
+                        if(user){
                             Collaborator.create({
                                 userId: user.id,
                                 wikiId: wiki.id,
@@ -100,7 +100,7 @@ module.exports = {
                                 callback(err);
                             });
                         } else {
-                            req.flash("notice", `${user.name} is already a collaborator on this wiki.`);
+                            req.flash("notice", `This user is already a collaborator on this wiki.`);
                             callback(null, user);
                         }
                     });
