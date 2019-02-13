@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const collaboratorController = require("../../src/controllers/collaboratorController");
 
-router.get("/wikis/:id/collaborators", collaboratorController.show);
-router.post("/wikis/:id/collaborators/create", collaboratorController.create);
-router.post("/wikis/:id/collaborators/destroy", collaboratorController.destroy);
+router.post("/wikis/:id/collaborators/add", collaboratorController.add);
+router.post("/wikis/:id/collaborators/remove", collaboratorController.remove);
 
 module.exports = router;
