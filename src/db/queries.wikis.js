@@ -96,6 +96,7 @@ module.exports = {
                                 callback(null, user);
                             })
                             .catch((err) => {
+                                console.log(err);
                                 callback(err);
                             });
                         } else {
@@ -105,6 +106,7 @@ module.exports = {
                     });
                 })
                 .catch((err) => {
+                    console.log(err);
                     callback(err);
                 });
             } else {

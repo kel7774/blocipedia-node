@@ -45,7 +45,8 @@ module.exports = {
     },
     show(req, res, next){
         wikiQueries.getWiki(req.params.id, (err, wiki) => {
-            if(err || wiki == null){
+            if(err || wiki == null) {
+                console.log(err);
                 res.redirect(404, "/");
             } else if(wiki.private == true){
                 wiki.body = markdown.toHTML(wiki.body);
@@ -95,7 +96,9 @@ module.exports = {
     },
     update(req, res, next){
         wikiQueries.updateWiki(req, req.body, (err, wiki) => {
+            console.log(err);
             if(err || wiki == null){
+                console.log(err);
                 res.redirect(401, `/wikis/${req.params.id}/edit`);
             } else {
                 res.redirect(`/wikis/${req.params.id}`);

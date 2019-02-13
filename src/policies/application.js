@@ -22,7 +22,7 @@ module.exports = class ApplicationPolicy {
      }
 
      _isCollaborator() {
-
+      
      }
    
      new() {

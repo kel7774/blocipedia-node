@@ -41,10 +41,10 @@ module.exports = (sequelize, DataTypes) => {
   };
   User.prototype.isOwner = function(){
     return this.role === "owner";
-  }
+  };
   User.prototype.isStandard = function(){
     return this.role = "standard";
-  }
+  };
   User.prototype.isCollaborator = function(user, record){
     let collab = 0;
     record.collaborators.forEach((collab) => {
