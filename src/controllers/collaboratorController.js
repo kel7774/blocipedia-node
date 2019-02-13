@@ -5,6 +5,7 @@ module.exports = {
         if(req.user){
             collaboratorQueries.addCollaborator(req, (err, collaborator) => {
                 if(err) {
+                    console.log(err);
                     req.flash("error", err);
                 }
                 res.redirect(req.headers.referer);

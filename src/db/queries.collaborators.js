@@ -17,11 +17,12 @@ module.exports = {
             Collaborator.findOne({
                 where: {
                     userId: user.id,
-                    wikiId: req.params.id
+                    wikiId: req.params.wikiId
                 }
             })
             .then((collaborator) => {
                 if(collaborator){
+                    console.log("user already collab success");
                     return callback("User is already a collaborator.");
                 }
                 return Collaborator.create({
@@ -32,14 +33,17 @@ module.exports = {
                     callback(null, collaborator);
                 })
                 .catch((err) => {
+                    console.log(err);
                     callback(null, err);
                 })
             })
             .catch((err) => {
+                console.log(err);
                 callback(null, err);
             })
         })
         .catch((err) => {
+            console.log(err);
             callback(null, err);
         })
     },
