@@ -17,7 +17,7 @@ module.exports = {
             Collaborator.findOne({
                 where: {
                     userId: user.id,
-                    wikiId: req.params.wikiId
+                    wikiId: req.params.id
                 }
             })
             .then((collaborator) => {
@@ -26,7 +26,7 @@ module.exports = {
                     return callback("User is already a collaborator.");
                 }
                 return Collaborator.create({
-                    wikiId: req.params.wikiId,
+                    wikiId: req.params.id,
                     userId: user.id
                 })
                 .then((collaborator) => {
@@ -49,15 +49,32 @@ module.exports = {
     },
 
     removeCollaborator(req, callback){
-        Collaborator.destroy({
+        return Collaborator.findOne({
             where: {
-                userId: req.params.userId
+                wikiId: wikiId,
+                userId: userId
             }
         })
-        .then((deletedRecordsCount) => {
-            callback(null, deletedRecordsCount);
+        .then((collaborator) => {
+            if(collaborator) {
+                Collaborator.destroy({
+                    where: {
+                        id: collaborator.id
+                    }
+                })
+                .then((collaborator) => {
+                    callback(null, collaborator);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    callback(err);
+                })
+            } else {
+                callback("error", "Collaborator is no longer on this wiki.");
+            }
         })
         .catch((err) => {
+            console.log(err);
             callback(err);
         })
     }
