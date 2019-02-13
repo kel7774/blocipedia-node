@@ -90,13 +90,11 @@ module.exports = {
                             Collaborator.create({
                                 userId: user.id,
                                 wikiId: wiki.id,
-                                collabName: user.name
                             })
                             .then((user) => {
                                 callback(null, user);
                             })
                             .catch((err) => {
-                                console.log(err);
                                 callback(err);
                             });
                         } else {
@@ -106,7 +104,6 @@ module.exports = {
                     });
                 })
                 .catch((err) => {
-                    console.log(err);
                     callback(err);
                 });
             } else {

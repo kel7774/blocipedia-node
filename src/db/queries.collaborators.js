@@ -22,7 +22,6 @@ module.exports = {
             })
             .then((collaborator) => {
                 if(collaborator){
-                    console.log("user already collab success");
                     return callback("User is already a collaborator.");
                 }
                 return Collaborator.create({
@@ -33,17 +32,14 @@ module.exports = {
                     callback(null, collaborator);
                 })
                 .catch((err) => {
-                    console.log(err);
                     callback(null, err);
                 })
             })
             .catch((err) => {
-                console.log(err);
                 callback(null, err);
             })
         })
         .catch((err) => {
-            console.log(err);
             callback(null, err);
         })
     },
@@ -55,11 +51,9 @@ module.exports = {
             }
         })
         .then((deleted) => {
-            console.log(deleted);
             callback(null, deleted);
         })
         .catch((err) => {
-            console.log(err);
             callback(err);
         });
     }

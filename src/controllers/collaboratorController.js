@@ -1,12 +1,10 @@
 const collaboratorQueries = require("../../src/db/queries.collaborators.js");
-const Authorized = require("../policies/application");
 
 module.exports = {
     add(req, res, next){
         if(req.user){
             collaboratorQueries.addCollaborator(req, (err, collaborator) => {
                 if(err) {
-                    console.log(err);
                     req.flash("error", err);
                 }
                 res.redirect(req.headers.referer);
@@ -20,8 +18,6 @@ module.exports = {
         if(req.user){
             collaboratorQueries.removeCollaborator(req, (err, collaborator) => {
                 if(err){
-                    console.log(err);
-                    console.log(user);
                     req.flash("error", err);
                 }
                 req.flash("notice", "This user has been removed as a collaborator");
