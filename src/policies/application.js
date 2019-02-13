@@ -20,10 +20,6 @@ module.exports = class ApplicationPolicy {
      _isStandard(){
        return this.user && this.user.role == "standard";
      }
-
-     _isCollaborator() {
-      
-     }
    
      new() {
        return this.user != null;

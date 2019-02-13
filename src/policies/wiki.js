@@ -7,7 +7,7 @@ module.exports = class WikiPolicy extends ApplicationPolicy {
   }
 
   show(){
-      return this._isStandard() || this._isAdmin() || this._isOwner() || this._isCollaborator();
+      return this._isStandard() || this._isAdmin() || this._isOwner();
   }
 
   create() {
