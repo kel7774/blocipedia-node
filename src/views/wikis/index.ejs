@@ -10,27 +10,23 @@
       <% include ../static/partials/messages.ejs %>
 
       <h1>Wikis</h1>
-      <% if(currentUser) { %>
-        <a href="/wikis/new" class="btn btn-success">New Wiki</a>
-      <% } %>
+
+      <a href="/wikis/new" class="btn btn-success">New Wiki</a>
+  
 
       <ul class="list-group">
-        <% wikis.forEach((wiki) => { %>
-          <% if(wiki.private === false || currentUser.isOwner(currentUser, wiki)) { %>
-            <% if(currentUser) { %>
-              <% if(currentUser.isAdmin() || currentUser.isPremium()) { %>
-                <li class="list-group-item">
-                  <a href="/wikis/<%= wiki.id %>"> <%- wiki.title %></a>
-                </li>
-              <% } %>
+          <% wikis.forEach((wiki) => { %>
+            <% if(wiki.private === true || currentUser.isPremium() || currentUser.isAdmin()) { %>
+                  <li class="list-group-item">
+                    <a href="/wikis/<%= wiki.id %>"> <%- wiki.title %></a>
+                  </li>
+            <% } else { %>
+              <li class="list-group-item">
+                <a href="/wikis/<%= wiki.id %>"> <%- wiki.title %></a>
+              </li>
             <% } %>
-          <% } else { %>
-            <li class="list-group-item">
-              <a href="/wikis/<%= wiki.id %>"> <%- wiki.title %></a>
-            </li>
-          <% } %>
-        <% }) %>
-      </ul>
+          <% }) %>
+        </ul>
      
       </main>
 

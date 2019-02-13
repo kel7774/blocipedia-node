@@ -18,7 +18,7 @@ module.exports = {
     },
     remove(req, res, next){
         if(req.user){
-            collaboratorQueries.removeCollaborator(req.params.id, req.body.userId, (err, collaborator) => {
+            collaboratorQueries.removeCollaborator(req, (err, collaborator) => {
                 if(err){
                     console.log(err);
                     req.flash("error", err);

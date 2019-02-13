@@ -49,33 +49,17 @@ module.exports = {
     },
 
     removeCollaborator(req, callback){
-        return Collaborator.findOne({
+        Collaborator.destroy({
             where: {
-                wikiId: wikiId,
-                userId: userId
+                userId: userId,
+                wikiId: wikiId
             }
         })
-        .then((collaborator) => {
-            if(collaborator) {
-                Collaborator.destroy({
-                    where: {
-                        id: collaborator.id
-                    }
-                })
-                .then((collaborator) => {
-                    callback(null, collaborator);
-                })
-                .catch((err) => {
-                    console.log(err);
-                    callback(err);
-                })
-            } else {
-                callback("error", "Collaborator is no longer on this wiki.");
-            }
+        .then((deleted) => {
+            callback(null, deleted);
         })
         .catch((err) => {
-            console.log(err);
             callback(err);
-        })
+        });
     }
 }
