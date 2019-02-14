@@ -2,35 +2,37 @@ const wikiQueries = require("../db/queries.wikis.js");
 const Private = require("../policies/wiki.js");
 const Authorized = require("../policies/application.js");
 const markdown = require( "markdown" ).markdown;
-const sequelize = require("sequelize");
+const Wiki = require("../db/models").Wiki;
+const Collaborator = require("../db/models").Collaborator;
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 
 module.exports = {
-    index(req, res, next){
-        const Op = Sequelize.Op;
+    index(req, res, next) {
         let userRole = {};
-        if(req.user.role !== "admin"){
-            userRole = {[Op.or]: 
-            [{priavte: false}, {userId: req.user.id}, {'$collaborators.userId$': req.user.id}]};
+        if(req.user.role !== "admin") {
+          userRole = {[Op.or]: [{private: false}, {userId: req.user.id}, {'$collaborators.userId$': req.user.id}]};
         } else {
-            userRole = {};
+          userRole = {};
         };
         Wiki.findAll({
-            include: [{
-                model: Collaborator,
-                as: 'collaborators',
-                attributes: ["userId"]
-            }],
-            where: userRole
+          include: [{
+            model: Collaborator,
+            as: "collaborators",
+            attributes: ["userId"]
+          }],
+          where: userRole
         })
         .then((wikis) => {
-            res.render("wikis/index", {wikis});
+          res.render("wikis/index", {wikis});
         })
-        .catch((err) => {
-            console.log(err);
-            res.redirect(500, "static/index");
-        })
-    },
+        
+        .catch(err => {
+          console.log(err);
+          res.redirect(500, "static/index");
+        }) 
+      },
     new(req, res, next){
         const authorized = new Authorized(req.user).new();
         if(authorized){
