@@ -67,50 +67,20 @@ module.exports = {
         })
       },
       updateWiki(req, updatedWiki, callback){
-        return Wiki.findById(req.params.id)
-        .then((wiki) => {
-            if(!wiki){
-                return callback("Wiki not found.");
-            }
-
-            let authorized;
-            if(wiki.private == false){
-                authorized = new Public(req.user, wiki).update();
-            } else {
-                authorized = new Private(req.user, wiki).update();
-            }
-
-            if(authorized){
-                wiki.update(updatedWiki, {
-                    fields: Object.keys(updatedWiki)
-                })
-                .then((wiki) => {
-                    User.findOne({where: {name: wiki.collaborator}})
-                    .then((user) => {
-                        if(user){
-                            Collaborator.create({
-                                userId: user.id,
-                                wikiId: wiki.id,
-                            })
-                            .then((user) => {
-                                callback(null, user);
-                            })
-                            .catch((err) => {
-                                callback(err);
-                            });
-                        } else {
-                            req.flash("notice", `This user is already a collaborator on this wiki.`);
-                            callback(null, user);
-                        }
-                    });
-                })
-                .catch((err) => {
-                    callback(err);
-                });
-            } else {
-                req.flash("notice", "You are not authorized to do that.");
-                callback("That action is forbidden.");
-            }
-        });
-    }
+          return Wiki.findById(req.params.id)
+          .then((wiki) => {
+              if(!wiki){
+                  return callback("Wiki not found.");
+              }
+              wiki.update(updatedWiki, {
+                  fields: Object.keys(updatedWiki)
+              })
+              .then(() => {
+                  callback(null, wiki);
+              })
+              .catch((err) => {
+                  callback(err);
+              });
+          });
+      }
 }
