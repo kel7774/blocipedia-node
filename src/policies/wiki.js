@@ -7,7 +7,7 @@ module.exports = class WikiPolicy extends ApplicationPolicy {
   }
 
   show(){
-      return this._isStandard() || this._isAdmin() || this._isOwner() || this._isPremium();
+      return this._isAdmin() || this._isOwner() || this._isCollaborator();
   }
 
   create() {
@@ -15,11 +15,11 @@ module.exports = class WikiPolicy extends ApplicationPolicy {
   }
 
   edit() {
-    return this._isStandard() || this._isAdmin() || this._isPremium();
+    return this._isAdmin() || this._isPremium() || this._isCollaborator();
   }
 
   update() {
-    return this.edit() && this._isPremium();
+    return this.edit() && this._isPremium() || this._isCollaborator();
   }
 
   destroy() {

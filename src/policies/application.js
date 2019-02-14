@@ -20,6 +20,10 @@ module.exports = class ApplicationPolicy {
      _isStandard(){
        return this.user && this.user.role == "standard";
      }
+
+     _isCollaborator(){
+       return this.record.collaborators.contains(this.user.id);
+     }
    
      new() {
        return this.user != null;
@@ -35,7 +39,7 @@ module.exports = class ApplicationPolicy {
    
      edit() {
        return this.new() &&
-         this.record && (this._isStandard() || this._isAdmin() || this._isPremium());
+         this.record && (this._isAdmin() || this._isPremium());
      }
    
      update() {
