@@ -2,9 +2,12 @@ const wikiQueries = require("../db/queries.wikis.js");
 const Private = require("../policies/wiki.js");
 const Authorized = require("../policies/application.js");
 const markdown = require( "markdown" ).markdown;
+const sequelize = require("sequelize");
+
 
 module.exports = {
     index(req, res, next){
+        const Op = Sequelize.Op;
         let userRole = {};
         if(req.user.role !== "admin"){
             userRole = {[Op.or]: 
