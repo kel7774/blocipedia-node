@@ -27,7 +27,6 @@ module.exports = {
         .then((wikis) => {
           res.render("wikis/index", {wikis});
         })
-        
         .catch(err => {
           console.log(err);
           res.redirect(500, "static/index");
