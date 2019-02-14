@@ -5,12 +5,27 @@ const markdown = require( "markdown" ).markdown;
 
 module.exports = {
     index(req, res, next){
-        wikiQueries.getAllWikis((err, wikis) => {
-            if(err){
-                res.redirect(500, "static/index");
-            } else {
-                res.render("wikis/index", {wikis});
-            }
+        let userRole = {};
+        if(req.user.role !== "admin"){
+            userRole = {[Op.or]: 
+            [{priavte: false}, {userId: req.user.id}, {'$collaborators.userId$': req.user.id}]};
+        } else {
+            userRole = {};
+        };
+        Wiki.findAll({
+            include: [{
+                model: Collaborator,
+                as: 'collaborators',
+                attributes: ["userId"]
+            }],
+            where: userRole
+        })
+        .then((wikis) => {
+            res.render("wikis/index", {wikis});
+        })
+        .catch((err) => {
+            console.log(err);
+            res.redirect(500, "static/index");
         })
     },
     new(req, res, next){

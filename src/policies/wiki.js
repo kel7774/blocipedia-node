@@ -1,5 +1,8 @@
 const ApplicationPolicy = require("./application");
 
+
+// this is for if the wiki has been set to private AND if the user is a collaborator
+
 module.exports = class WikiPolicy extends ApplicationPolicy {
 
   new() {
@@ -7,7 +10,7 @@ module.exports = class WikiPolicy extends ApplicationPolicy {
   }
 
   show(){
-    return this._isAdmin() || this._isOwner() || (this._isCollaborator() && this._isPremium());
+    return this._isAdmin() || this._isOwner() || this._isCollaborator();
   }
 
   create() {
@@ -19,7 +22,7 @@ module.exports = class WikiPolicy extends ApplicationPolicy {
   }
 
   update() {
-    return this.edit() || this._isPremium();
+    return this.edit();
   }
 
   destroy() {
