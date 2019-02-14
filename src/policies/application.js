@@ -3,6 +3,7 @@ module.exports = class ApplicationPolicy {
   constructor(user, record) {
     this.user = user;
     this.record = record;
+    this.collaborators = collaborators;
   }
 
   _isOwner() {
@@ -15,6 +16,10 @@ module.exports = class ApplicationPolicy {
 
   _isPremium() {
       return this.user && this.user.role == "premium";
+  }
+
+  _isCollaborator(){
+    return this.collaborators.id == this.user.userId && this.collaborators.id == this.user.wikiId;
   }
 
   new() {
