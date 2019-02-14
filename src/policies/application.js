@@ -1,11 +1,8 @@
-const collaborators = require("../db/models").Collaborator;
-
 module.exports = class ApplicationPolicy {
 
   constructor(user, record) {
     this.user = user;
     this.record = record;
-    this.collaborators = collaborators;
   }
 
   _isOwner() {
@@ -18,10 +15,6 @@ module.exports = class ApplicationPolicy {
 
   _isPremium() {
       return this.user && this.user.role == "premium";
-  }
-
-  _isCollaborator(){
-    return this.collaborators.userId == this.user.userId && this.collaborators.wikiId == this.user.wikiId;
   }
 
   new() {
