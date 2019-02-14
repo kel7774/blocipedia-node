@@ -16,9 +16,6 @@ module.exports = class ApplicationPolicy {
      _isPremium() {
          return this.user && this.user.role == "premium";
      }
-
-     _isCollaborator(){
-     }
    
      new() {
        return this.user != null;
@@ -26,10 +23,6 @@ module.exports = class ApplicationPolicy {
    
      create() {
        return this.new();
-     }
-   
-     show() {
-       return true;
      }
    
      edit() {
