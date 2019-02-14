@@ -1,3 +1,5 @@
+const collaborators = require("../db/models").Collaborator;
+
 module.exports = class ApplicationPolicy {
 
   constructor(user, record) {
@@ -19,7 +21,7 @@ module.exports = class ApplicationPolicy {
   }
 
   _isCollaborator(){
-    return this.collaborators.id == this.user.userId && this.collaborators.id == this.user.wikiId;
+    return this.collaborators.userId == this.user.userId && this.collaborators.wikiId == this.user.wikiId;
   }
 
   new() {
