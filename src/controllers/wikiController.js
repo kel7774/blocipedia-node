@@ -93,6 +93,7 @@ module.exports = {
     },
     edit(req, res, next){
         wikiQueries.getWiki(req.params.id, (err, wiki) => {
+            console.log(err + "never got to authorized");
             let authorized;
             if(wiki.private == true){
                 authorized = new Private(req.user, wiki).edit();
@@ -102,8 +103,10 @@ module.exports = {
             if(authorized){
                 wikiQueries.getWiki(req.params.id, (err, wiki) => {
                     if(err || wiki == null){
+                        console.log(err + "made it to first if");
                         res.redirect(404, `/wikis`);
                     } else {
+                        console.log(err + "made it to else");
                         res.render("wikis/edit", {wiki});
                     }
                 });
