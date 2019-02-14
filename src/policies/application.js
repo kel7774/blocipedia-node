@@ -22,7 +22,7 @@ module.exports = class ApplicationPolicy {
      }
 
      _isCollaborator(){
-       return this.record.collaborators.contains(this.user.id);
+       return this.record && (this.record.collaborator == this.user.id);
      }
    
      new() {
