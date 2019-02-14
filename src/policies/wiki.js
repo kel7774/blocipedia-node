@@ -10,12 +10,8 @@ module.exports = class WikiPolicy extends ApplicationPolicy {
     return this.new();
   }
 
-  show(){
-    return this._isAdmin() || this._isOwner();
-  }
-
   edit() {
-    return this.show();
+    return true;
   }
 
   update() {
