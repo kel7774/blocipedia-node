@@ -66,34 +66,41 @@ module.exports = {
             callback(err);
         })
       },
-      updateWiki(req, updatedWiki, callback){
-          return Wiki.findById(req.params.id)
-          .then((wiki) => {
-              if(!wiki){
-                  return callback("Wiki not found.");
-              }
-
-              let authorized;
-              if(wiki.private == false){
-                  authorized = new Public(req.user, wiki).update();
-              } else {
-                  authorized = new Private(req.user, wiki).update();
-              }
-
-              if(authorized){
-                wiki.update(updatedWiki, {
-                    fields: Object.keys(updatedWiki)
+      updateWiki(req, updatedWiki, callback) {
+        return Wiki.findById(req.params.id).then(wiki => {
+          Collaborator.findOne({
+            where: {
+              userId: req.user.id,
+              wikiId: wiki.id
+            }
+          }).then(collaborator => {
+            if (!wiki) {
+              return callback("Wiki not found.");
+            }
+      
+            let authorized;
+            if (wiki.private == false) {
+              authorized = new Public(req.user, wiki).update();
+            } else {
+              authorized = new Private(req.user, wiki, collaborator).update();
+            }
+      
+            if (authorized) {
+              wiki
+                .update(updatedWiki, {
+                  fields: Object.keys(updatedWiki)
                 })
                 .then(() => {
-                    callback(null, wiki);
+                  callback(null, wiki);
                 })
-                .catch((err) => {
-                    callback(err);
+                .catch(err => {
+                  callback(err);
                 });
-              } else {
-                  req.flash("notice", "You are not authorized to do that.");
-                  callback("This action is forbidden.");
-              }
+            } else {
+              req.flash("notice", "You are not authorized to do that.");
+              callback("This action is forbidden.");
+            }
           });
+        });
       }
 }

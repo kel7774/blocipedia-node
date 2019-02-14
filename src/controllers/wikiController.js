@@ -90,28 +90,35 @@ module.exports = {
             }
         });
     },
-    edit(req, res, next){
+    edit(req, res, next) {
         wikiQueries.getWiki(req.params.id, (err, wiki) => {
+          Collaborator.findOne({
+            where: {
+              wikiId: wiki.id,
+              userId: req.user.id
+            }
+          }).then(collaborator => {
             let authorized;
-            if(wiki.private == true){
-                authorized = new Private(req.user, wiki).edit();
+            if (wiki.private == true) {
+              authorized = new Private(req.user, wiki, collaborator).edit();
             } else {
-                authorized = new Authorized(req.user, wiki).edit();
+              authorized = new Authorized(req.user, wiki).edit();
             }
-            if(authorized){
-                wikiQueries.getWiki(req.params.id, (err, wiki) => {
-                    if(err || wiki == null){
-                        res.redirect(404, `/wikis`);
-                    } else {
-                        res.render("wikis/edit", {wiki});
-                    }
-                });
+            if (authorized) {
+              wikiQueries.getWiki(req.params.id, (err, wiki) => {
+                if (err || wiki == null) {
+                  res.redirect(404, `/wikis`);
+                } else {
+                  res.render("wikis/edit", { wiki });
+                }
+              });
             } else {
-                req.flash("notice", "You are not authorized to do that.");
-                res.redirect(`/wikis/${wiki.id}`);
+              req.flash("notice", "You are not authorized to do that.");
+              res.redirect(`/wikis/${wiki.id}`);
             }
-        })
-    },
+          });
+        });
+      },
     update(req, res, next){
         wikiQueries.updateWiki(req, req.body, (err, wiki) => {
             if(err || wiki == null){

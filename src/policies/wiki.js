@@ -3,20 +3,13 @@ const Collaborator = require("../db/models").Collaborator;
 
 module.exports = class WikiPolicy extends ApplicationPolicy {
 
-  constructor(user, record){
-      super();
-      this.user = user;
-      this.record = record;
+  constructor(user, wiki, collaborator = null) {
+    super(user, wiki);
+    this.collaborator = collaborator;
   }
 
   _isCollaborator(){
-    let collaborator = Collaborator.findOne({
-        where: {
-          userId: this.user.userId,
-          wikiId: this.record.wikiId
-      }
-    });
-    return collaborator;
+    return !!this.collaborator;
   }
 
   new() {
@@ -28,7 +21,7 @@ module.exports = class WikiPolicy extends ApplicationPolicy {
   }
 
   show(){
-    return this._isAdmin() || this._isOwner() || (this._isCollaborator() && this._isPremium());
+    return this._isAdmin() || this._isOwner() || this._isCollaborator();
   }
 
   edit() {
