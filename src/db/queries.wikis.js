@@ -4,7 +4,6 @@ const Collaborator = require("./models").Collaborator;
 const Private = require("../policies/wiki");
 const Public = require("../policies/application");
 
-
 module.exports = {
     getAllWikis(callback){
         return Wiki.all()

@@ -64,21 +64,28 @@ module.exports = {
     },
     show(req, res, next){
         wikiQueries.getWiki(req.params.id, (err, wiki) => {
-            if(err || wiki == null) {
-                res.redirect(404, "/");
-            } else if(wiki.private == true){
-                wiki.body = markdown.toHTML(wiki.body);
-                const private = new Private(req.user, wiki).show();
-                if(private){
-                    res.render('wikis/show', {wiki});
-                } else {
-                    req.flash("notice", "You are not authorized to view this wiki");
-                    res.redirect('/wikis');
+            Collaborator.findOne({
+                where: {
+                    wikiId: wiki.id,
+                    userId: req.user.id
                 }
-            } else {
-                wiki.body = markdown.toHTML(wiki.body);
-                res.render("wikis/show", {wiki});
-            }
+            }).then(collaborator => {
+                if(err || wiki == null) {
+                    res.redirect(404, "/");
+                } else if(wiki.private == true){
+                    wiki.body = markdown.toHTML(wiki.body);
+                    const private = new Private(req.user, wiki, collaborator).show();
+                    if(private){
+                        res.render('wikis/show', {wiki});
+                    } else {
+                        req.flash("notice", "You are not authorized to view this wiki");
+                        res.redirect('/wikis');
+                    }
+                } else {
+                    wiki.body = markdown.toHTML(wiki.body);
+                    res.render("wikis/show", {wiki});
+                }
+            })
         });
     },
     destroy(req, res, next){
